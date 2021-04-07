@@ -1,0 +1,147 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Y5 Slideshow</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:wght@400;600&family=Source+Sans+Pro:ital,wght@0,400;0,700;1,400&display=swap');
+
+  body {
+    margin: 0;
+    overflow: hidden;
+    width: 100vw;
+    height: 100vh;
+    font-family: 'Source Sans Pro', sans-serif;
+    background-color: #f8f8f8;
+    color: #383838;
+  }
+  iframe {
+    width: 100vw;
+    height: 95vh;
+    border: none;
+  }
+  #next-banner {
+    width: 100vw;
+    height: 4.5vh;
+    border-top: 1px solid #666666;
+    display: flex;
+    align-items: center;
+  }
+  .banner {
+    display: flex;
+    justify-content: space-between;
+    width: 95vw;
+    margin: auto;
+    align-content: center;
+  }
+  #display {
+    display: none;
+  }
+  #fullscreen {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100vw;
+    height: 100vh;
+  }
+  #message {
+    font-weight: 700;
+  }
+</style>
+</head>
+<body>
+  <div id="display">
+    <iframe id="address" src="" title=""></iframe>
+    <div id="next-banner">
+      <div class="banner">
+        <div><b>Next: </b><span id="next-display">{{ ADDRESS NAME }}</span></div>
+        <div>Changing in <span id="countdown">{{ COUNTER }}</span>s</div>
+      </div>
+    </div>
+  </div>
+  <div id="fullscreen">
+    <span id="message">Loading...</span>
+  </div>
+</body>
+</html>
+<script>
+  var fullscreen = document.getElementById("fullscreen")
+  var message = document.getElementById("message")
+  var display = document.getElementById("display")
+  var address = document.getElementById("address")
+  var next_banner = document.getElementById("next-banner")
+  var next_display = document.getElementById("next-display")
+  var countdown = document.getElementById("countdown")
+
+  var parameters = window.location.search
+  const urlParams = new URLSearchParams(parameters);
+  const token = urlParams.get('token')
+
+  console.log(token)
+
+  if (token == null) {
+    message.innerHTML = "No Token Provided"
+  } else {
+    const addresses = JSON.parse(atob(token)).addresses
+    const duration = JSON.parse(atob(token)).duration_s
+    const total_addresses = addresses.length
+
+    console.log(addresses)
+    console.log(duration)
+    console.log(total_addresses)
+
+    if (total_addresses == 0) {
+      message.innerHTML = "No Addresses Have Been Provided To Display?"
+    } else if (total_addresses == 1) {
+      fullscreen.style.display = "none"
+      display.style.display = "block"
+      address.style.height = "100vh"
+      next_banner.style.display = "none"
+
+      address.src = addresses[0].src
+      address.title = addresses[0].name
+    } else {
+      fullscreen.style.display = "none"
+      display.style.display = "block"
+      var current_address_index = 0
+      var next_address_index = 1
+      var current_address = addresses[current_address_index]
+      var next_address= addresses[next_address_index]
+
+      // Set first address to display
+      address.src = current_address.src
+      address.title = current_address.name
+
+      var elapsed = duration
+
+      // Set for next address
+      next_display.innerHTML = next_address.name;
+      countdown.innerHTML = elapsed;
+
+      var timer = setInterval(function() {
+        elapsed = elapsed - 1
+        countdown.innerHTML = elapsed
+      }, 1000)
+
+      var change = setInterval(function() {
+        elapsed = duration
+        countdown.innerHTML = elapsed
+
+        address.src = next_address.src
+        address.title = next_address.name
+
+        current_address_index = next_address_index
+        current_address = addresses[current_address_index]
+        next_address_index = next_address_index + 1
+
+        if(next_address_index == total_addresses) {
+          next_address_index = 0
+        }
+
+        next_address = addresses[next_address_index]
+        next_display.innerHTML = next_address.name;
+        countdown.innerHTML = elapsed;
+      }, (1000 * duration))
+    }
+  }
+</script>
