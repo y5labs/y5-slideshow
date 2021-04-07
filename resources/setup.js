@@ -16,10 +16,17 @@ function setup() {
     return
   }
 
+  try {
+    JSON.parse(atob(token))
+  } catch(e) {
+    message.innerHTML = "Malformed Token Provided"
+    return
+  }
+
   const setup = JSON.parse(atob(token))
 
   if(!this.isObject(setup)) {
-    message.innerHTML = "In Correct Token Structure"
+    message.innerHTML = "Token Structure Is Not An Object"
     return
   }
 
