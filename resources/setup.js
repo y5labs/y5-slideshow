@@ -2,6 +2,7 @@ function setup() {
   var fullscreen = document.getElementById("fullscreen")
   var message = document.getElementById("message")
   var display = document.getElementById("display")
+  var iframe_wrapper = document.getElementById("iframe-wrapper")
   var address = document.getElementById("address")
   var next_banner = document.getElementById("next-banner")
   var next_display = document.getElementById("next-display")
@@ -42,11 +43,16 @@ function setup() {
   if (total_addresses == 1) {
     fullscreen.style.display = "none"
     display.style.display = "block"
-    address.style.height = "100vh"
     next_banner.style.display = "none"
 
-    address.src = addresses[0].src
-    address.title = addresses[0].name
+    var iframe = document.createElement('iframe')
+    iframe.src = addresses[0].src
+    iframe.title = addresses[0].name
+    iframe.classList.add("iframe-fullscreen")
+    iframe.scrolling = 'no'
+
+    iframe_wrapper.appendChild(iframe)
+
     return
   }
 
@@ -57,9 +63,22 @@ function setup() {
   var current_address = addresses[current_address_index]
   var next_address= addresses[next_address_index]
 
-  // Set first address to display
-  address.src = current_address.src
-  address.title = current_address.name
+  // Create iframes for all addresses
+  for(var i = 0; i < total_addresses; i++) {
+    var iframe = document.createElement('iframe')
+    iframe.src = addresses[i].src
+    iframe.title = addresses[i].name
+    iframe.classList.add("iframe-multi")
+    iframe.scrolling = 'no'
+
+    if(i != 0) {
+      iframe.style.display = "none"
+    }
+
+    iframe_wrapper.appendChild(iframe)
+  }
+
+  const nodes = document.querySelectorAll('iframe')
 
   var elapsed = duration
 
@@ -76,8 +95,8 @@ function setup() {
     elapsed = duration
     countdown.innerHTML = elapsed
 
-    address.src = next_address.src
-    address.title = next_address.name
+    nodes[current_address_index].style.display = 'none'
+    nodes[next_address_index].style.display = 'block'
 
     current_address_index = next_address_index
     current_address = addresses[current_address_index]

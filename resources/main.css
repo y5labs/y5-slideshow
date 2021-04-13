@@ -9,9 +9,14 @@ body {
   background-color: #f8f8f8;
   color: #383838;
 }
-iframe {
+.iframe-multi {
   width: 100vw;
   height: 95vh;
+  border: none;
+}
+.iframe-fullscreen {
+  width: 100vw;
+  height: 100vh;
   border: none;
 }
 #next-banner {
