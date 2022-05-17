@@ -7,6 +7,7 @@ function setup() {
   var next_banner = document.getElementById("next-banner")
   var next_display = document.getElementById("next-display")
   var countdown = document.getElementById("countdown")
+  var iframes = []
 
   var parameters = window.location.search
   const urlParams = new URLSearchParams(parameters);
@@ -50,6 +51,7 @@ function setup() {
     iframe.title = addresses[0].name
     iframe.classList.add("iframe-fullscreen")
     iframe.scrolling = 'no'
+    iframes.push(iframe)
 
     iframe_wrapper.appendChild(iframe)
 
@@ -70,15 +72,17 @@ function setup() {
     iframe.title = addresses[i].name
     iframe.classList.add("iframe-multi")
     iframe.scrolling = 'no'
+    iframes.push(iframe)
 
     if(i != 0) {
       iframe.style.display = "none"
+      setTimeout(function(){
+        iframe_wrapper.appendChild(iframe)
+      }, i * 500)
+    } else {
+      iframe_wrapper.appendChild(iframe)
     }
-
-    iframe_wrapper.appendChild(iframe)
   }
-
-  const nodes = document.querySelectorAll('iframe')
 
   var elapsed = duration
 
@@ -95,8 +99,9 @@ function setup() {
     elapsed = duration
     countdown.innerHTML = elapsed
 
-    nodes[current_address_index].style.display = 'none'
-    nodes[next_address_index].style.display = 'block'
+    iframes[current_address_index].style.display = 'none'
+    iframes[next_address_index].style.display = 'block'
+    //iframes[next_address_index].src = addresses[next_address_index].src
 
     current_address_index = next_address_index
     current_address = addresses[current_address_index]
