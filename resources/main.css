@@ -14,6 +14,9 @@ body {
   height: 95vh;
   border: none;
 }
+.hide-nav .iframe-multi {
+  height: 100vh;
+}
 .iframe-fullscreen {
   width: 100vw;
   height: 100vh;
@@ -25,6 +28,9 @@ body {
   border-top: 1px solid #666666;
   display: flex;
   align-items: center;
+}
+.hide-nav #next-banner {
+  display: none;
 }
 .banner {
   display: flex;
