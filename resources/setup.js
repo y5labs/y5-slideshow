@@ -7,8 +7,7 @@ function setup() {
   const next_display = document.getElementById('next-display')
   const countdown = document.getElementById('countdown')
 
-  const urlParams = new URLSearchParams(window.location.search)
-  const token = urlParams.get('token')
+  const token = new URLSearchParams(window.location.search).get('token')
 
   if (token == null) {
     message.innerHTML = 'No Token Provided'
